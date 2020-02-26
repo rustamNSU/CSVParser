@@ -18,17 +18,18 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     set (CMAKE_CONFIGURATION_TYPES Release)
 endif()
 
-add_compile_options(-Wall -Wextra -pedantic -Werror)
+# add_compile_options(-Wall -Wextra -pedantic -Werror)
 
 # INSTALL_PREFIX MATCHES "^/usr/local" OR CMAKE_INSTALL_PREFIX MATCHES "^C:/Program Files" )
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/Installation)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 
 # RPath folder
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
-# include(${CMAKE_CURRENT_SOURCE_DIR}/externalGoogleTest.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/externalGoogleTest.cmake)
 add_subdirectory (src)
 install(EXPORT MyCSVParserConfig DESTINATION lib)
 
-# add_subdirectory (Tests) 
+add_subdirectory (Tests) 
