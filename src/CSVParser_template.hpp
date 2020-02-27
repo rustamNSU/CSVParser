@@ -75,7 +75,7 @@ void CSVParser<Args...>::AddRow(std::string str_for_stream)
             quoted_field        = false;
             continue;
         }
-        
+
         // Skip space char after quated field
         if (c == ' ' && (expect_double_quote || !quoted_field))
         {
@@ -110,7 +110,17 @@ void CSVParser<Args...>::AddRow(std::string str_for_stream)
     }
 
     this->dataStr.push_back(result);
+    this->data.push_back(TransformStrToTuple(result));
+}
 
+template <typename... Args>
+std::tuple<Args...> CSVParser<Args...>::TransformStrToTuple(
+    std::vector<std::string> data_str)
+{
+    std::tuple<Args...> result{};
+    int const t_size = sizeof...(Args);
+    iterate_tuple<t_size - 1, fill, Args...>::next(result, fill(data_str));
+    return result;
 }
 
 template <typename... Args>
