@@ -4,7 +4,16 @@
 #include "CSVParser.hpp"
 
 
-using namespace MyCSV; 
+using namespace MyCSV;
+
+void openFile(std::ifstream &file, std::string filename)
+{
+    file.open("Tests/Input/" + filename);
+    if (!file.is_open())
+    {
+        std::cout << "File  " + filename + "  didn\'t open\n";
+    }
+}
 
 TEST( CSVParserTest, constructorTest1 ) 
 {
@@ -19,13 +28,28 @@ TEST( CSVParserTest, constructorTest1 )
 
 TEST( CSVParserTest, constructorTest2 ) 
 {
-    std::ifstream file("Tests/Simple.csv");
-    if (!file.is_open())
-    {
-        std::cout << "File didn\'t open";
-    }
+    std::ifstream file;
+    openFile(file, "Simple.csv");
     CSVParser< int, int> csv(file);
 
     ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
     ASSERT_EQ(csv.RowsNumber(), size_t(3));
 }
+
+TEST( CSVParserTest, hardTest ) 
+{
+    std::ifstream file;
+    openFile(file, "Hard.csv");
+    CSVParser< int, std::string> csv(file);
+
+    ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
+    ASSERT_EQ(csv.RowsNumber(), size_t(3));
+}
+
+// TEST( CSVParserTest, incorrectExceptionTest ) 
+// {
+//     std::ifstream file;
+//     openFile(file, "Incorrect1.csv");
+
+//     EXPECT_ANY_THROW({CSVParser<int, int>{file}});
+// }

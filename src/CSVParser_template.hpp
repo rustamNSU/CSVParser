@@ -60,22 +60,11 @@ void CSVParser<Args...>::AddRow(std::string str_for_stream)
             result.push_back(buf);
             buf.clear();
 
-            read_field = false;
-            quoted_field = false;
+            read_field          = false;
+            quoted_field        = false;
             expect_double_quote = false;
-            need_separator = false;
+            need_separator      = false;
 
-            continue;
-        }
-
-        // Skip space char after quated field
-        if (c == ' ' && (expect_double_quote || !quoted_field))
-        {
-            expect_double_quote = false;
-            read_field = false;
-            quoted_field = false;
-
-            need_separator = true;
             continue;
         }
 
@@ -83,7 +72,18 @@ void CSVParser<Args...>::AddRow(std::string str_for_stream)
         if (c == ' ' && !read_field)
         {
             expect_double_quote = false;
-            quoted_field = false;
+            quoted_field        = false;
+            continue;
+        }
+        
+        // Skip space char after quated field
+        if (c == ' ' && (expect_double_quote || !quoted_field))
+        {
+            expect_double_quote = false;
+            read_field          = false;
+            quoted_field        = false;
+
+            need_separator      = true;
             continue;
         }
 
