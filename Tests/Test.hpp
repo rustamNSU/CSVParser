@@ -1,6 +1,11 @@
 #pragma once
 
-namespace constructorTest
+namespace constructorTest1
+{
+    
+}
+
+namespace constructorTest2
 {
     
 }
