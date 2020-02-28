@@ -46,10 +46,35 @@ TEST( CSVParserTest, hardTest )
     ASSERT_EQ(csv.RowsNumber(), size_t(3));
 }
 
-// TEST( CSVParserTest, incorrectExceptionTest ) 
-// {
-//     std::ifstream file;
-//     openFile(file, "Incorrect1.csv");
+TEST( CSVParserTest, bigDataTest ) 
+{
+    std::ifstream file;
+    openFile(file, "StandartSalesJan2009.csv");
 
-//     EXPECT_ANY_THROW({CSVParser<int, int>{file}});
-// }
+    CSVParser<
+        std::string,
+        std::string,
+        int,
+        std::string,
+        std::string,
+        std::string,
+        std::string,
+        std::string,
+        std::string,
+        std::string,
+        double,
+        double
+    > csv(file, 1);
+
+    ASSERT_EQ(csv.ColumnsNumber(), size_t(12));
+    ASSERT_EQ(csv.RowsNumber(), size_t(998));
+
+    int count = 0;
+    for (auto i : csv)
+    {
+        std::cout << std::get<1>(i) << std::endl;
+        ++count;
+    }
+    std::cout << count << "\n";
+
+}

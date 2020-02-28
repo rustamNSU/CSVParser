@@ -6,12 +6,25 @@ CSVParser<Args...>::CSVParser(std::ifstream &file, size_t skip_first_lines_)
     : skip_first_lines{skip_first_lines_}
 {
     std::string line;
+    int skip = skip_first_lines;
+    while(skip)
+    {
+        if (getline(file, line))
+        {
+            --skip;
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
     while (getline(file, line))
     {
-        AddRow(line);
-        ++(this->nRow); 
+        AddRow(line); 
     }
 }
+
 
 template <typename... Args>
 void CSVParser<Args...>::AddRow(std::string str_for_stream)
@@ -111,7 +124,10 @@ void CSVParser<Args...>::AddRow(std::string str_for_stream)
 
     this->dataStr.push_back(result);
     this->data.push_back(TransformStrToTuple(result));
+
+    ++(this->nRow);
 }
+
 
 template <typename... Args>
 std::tuple<Args...> CSVParser<Args...>::TransformStrToTuple(
@@ -119,9 +135,10 @@ std::tuple<Args...> CSVParser<Args...>::TransformStrToTuple(
 {
     std::tuple<Args...> result{};
     int const t_size = sizeof...(Args);
-    iterate_tuple<t_size - 1, fill, Args...>::next(result, fill(data_str));
+    iterate_tuple<t_size - 1, fill, Args...>::next(result, fill(data_str, nRow+1));
     return result;
 }
+
 
 template <typename... Args>
 void CSVParser<Args...>::SetSeparator(char separator_)
@@ -129,11 +146,13 @@ void CSVParser<Args...>::SetSeparator(char separator_)
     this->separator = separator_;
 }
 
+
 template <typename... Args>
 void CSVParser<Args...>::SetQuote(char quote_)
 {
     this->quote = quote_;
 }
+
 
 template <typename... Args>
 size_t CSVParser<Args...>::RowsNumber()
@@ -141,10 +160,108 @@ size_t CSVParser<Args...>::RowsNumber()
     return nRow;
 }
 
+
 template <typename... Args>
 size_t CSVParser<Args...>::ColumnsNumber()
 {
     return nCol;
+}
+
+
+/* Iterator and const iterator */ 
+template <typename... Args>
+template <typename ValueType>
+CSVParser<Args...>::InputIterator<ValueType>::InputIterator(ValueType* ptr)
+{
+    this->ptr = ptr;
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+CSVParser<Args...>::InputIterator<ValueType>::InputIterator(
+    const InputIterator &other)
+{
+    this->ptr(other.ptr);
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+bool CSVParser<Args...>::InputIterator<ValueType>::operator==(
+    const InputIterator &other) const
+{
+    return this->ptr == other.ptr;
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+bool CSVParser<Args...>::InputIterator<ValueType>::operator!=(
+    const InputIterator &other) const
+{
+    return this->ptr != other.ptr;
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+CSVParser<Args...>::InputIterator<ValueType>&
+CSVParser<Args...>::InputIterator<ValueType>::operator++()
+{
+    ++(this->ptr);
+    return *this;
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+CSVParser<Args...>::InputIterator<ValueType>&
+CSVParser<Args...>::InputIterator<ValueType>::operator++(int)
+{
+    InputIterator tmp(*this);
+    ++(*this);
+    return tmp;
+}
+
+
+template <typename... Args>
+template <typename ValueType>
+const ValueType& 
+CSVParser<Args...>::InputIterator<ValueType>::operator*() const
+{
+    return *(this->ptr);
+}
+
+
+template <typename... Args>
+typename CSVParser<Args...>::iterator
+CSVParser<Args...>::begin()
+{
+    return iterator(&(*(data.begin())));
+}
+
+
+template <typename... Args>
+typename CSVParser<Args...>::iterator
+CSVParser<Args...>::end()
+{
+    return iterator(&(*(data.begin())) + nRow);
+}
+
+template <typename... Args>
+typename CSVParser<Args...>::const_iterator
+CSVParser<Args...>::begin() const
+{
+    return iterator_const(&(*(data.begin())));
+}
+
+
+template <typename... Args>
+typename CSVParser<Args...>::const_iterator
+CSVParser<Args...>::end() const
+{
+    return const_iterator(&(*(data.begin())) + nRow);
 }
 
 } // namespace MyCSV
