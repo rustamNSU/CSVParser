@@ -188,7 +188,7 @@ public:
     }
 
     template <typename T>
-    void print_object(T &t, int index)
+    void print_object(T t, int index)
     {
         if (index != size - 1)
         {
@@ -200,7 +200,7 @@ public:
         }      
     }
     
-    void print_object(string &t, int index)
+    void print_object(string t, int index)
     {
         if (index != size - 1)
         {
