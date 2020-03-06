@@ -174,7 +174,7 @@ template<typename... Args>
 class Print
 {
 private:
-    tuple<Args...> data;
+    const tuple<Args...>& data;
     std::ostream& out;
     size_t size;
 
@@ -182,7 +182,7 @@ public:
     Print(const tuple<Args...>& data_, size_t size_, std::ostream& out_) 
         : data(data_), size(size_), out(out_) {}
 
-    tuple<Args...>& get_data()
+    const tuple<Args...>& get_data()
     {
         return data;
     }
