@@ -141,6 +141,93 @@ public:
 }; 
 
 
+/****************************************** *//**
+ * Iterators for printing tuple
+ * *****************************************/
+template<int index, typename Function>
+struct print_tuple 
+{
+    static void next(Function& print) 
+    {
+        print_tuple<index - 1, Function>::next(print);
+        print.print_object(std::get<index>(print.get_data()), index);
+    }
+};
+
+template<typename Function>
+struct print_tuple<0, Function>
+{
+    static void next(Function& print) 
+    {
+        print.print_object(std::get<0>(print.get_data()), 0);
+    }
+};
+
+// For empty tuple
+template<typename Function>
+struct print_tuple<-1, Function>
+{
+    static void next(Function& print) {}
+};
+
+template<typename... Args>
+class Print
+{
+private:
+    tuple<Args...> data;
+    std::ostream& out;
+    size_t size;
+
+public:
+    Print(const tuple<Args...>& data_, size_t size_, std::ostream& out_) 
+        : data(data_), size(size_), out(out_) {}
+
+    tuple<Args...>& get_data()
+    {
+        return data;
+    }
+
+    template <typename T>
+    void print_object(T &t, int index)
+    {
+        if (index != size - 1)
+        {
+            out << t << ' ';
+        }
+        else
+        {
+            out << t;
+        }      
+    }
+    
+    void print_object(string &t, int index)
+    {
+        if (index != size - 1)
+        {
+            out << '\"' << t << "\", ";
+        }
+        else
+        {
+            out << '\"' << t << "\"";
+        }      
+    }
+};
+
+template<typename... Args>
+std::ostream& operator << (std::ostream& out, const tuple<Args...>& t)
+{
+    int const size = sizeof...(Args);
+    if (size == 0)
+    {
+        return out;
+    }
+
+    Print<Args...> a(t, size, out);
+    print_tuple<size-1, Print<Args...>>::next(a);
+    return out;
+}
+
+
 } // namespace MyCSV
 
 #include "CSVParser_template.hpp"

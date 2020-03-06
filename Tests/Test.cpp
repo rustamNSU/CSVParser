@@ -72,9 +72,26 @@ TEST( CSVParserTest, bigDataTest )
     int count = 0;
     for (auto i : csv)
     {
-        std::cout << std::get<1>(i) << std::endl;
+        std::cout << count << ") " << std::get<5>(i) << ", ";
         ++count;
     }
-    std::cout << count << "\n";
+    std::cout << "\ncount = " << count << "\n";
+}
 
+
+TEST( CSVParserTest, outputOperator ) 
+{
+    std::ifstream file;
+    openFile(file, "Hard.csv");
+    CSVParser< int, std::string> csv(file);
+
+    ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
+    ASSERT_EQ(csv.RowsNumber(), size_t(3));
+
+    int count = 1;
+    for (auto i : csv)
+    {
+        std::cout << count << ") " << i << std::endl;
+        ++count;
+    }
 }

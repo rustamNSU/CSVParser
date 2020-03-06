@@ -140,6 +140,9 @@ std::tuple<Args...> CSVParser<Args...>::TransformStrToTuple(
 }
 
 
+/**
+ * Setters
+ */
 template <typename... Args>
 void CSVParser<Args...>::SetSeparator(char separator_)
 {
@@ -154,6 +157,9 @@ void CSVParser<Args...>::SetQuote(char quote_)
 }
 
 
+/**
+ * Getters
+ */
 template <typename... Args>
 size_t CSVParser<Args...>::RowsNumber()
 {
@@ -168,7 +174,9 @@ size_t CSVParser<Args...>::ColumnsNumber()
 }
 
 
-/* Iterator and const iterator */ 
+/**
+ *  InputIterator methods 
+ */ 
 template <typename... Args>
 template <typename ValueType>
 CSVParser<Args...>::InputIterator<ValueType>::InputIterator(ValueType* ptr)
@@ -234,6 +242,9 @@ CSVParser<Args...>::InputIterator<ValueType>::operator*() const
 }
 
 
+/**
+ * Iterator constructors
+ */
 template <typename... Args>
 typename CSVParser<Args...>::iterator
 CSVParser<Args...>::begin()
@@ -253,7 +264,7 @@ template <typename... Args>
 typename CSVParser<Args...>::const_iterator
 CSVParser<Args...>::begin() const
 {
-    return iterator_const(&(*(data.begin())));
+    return const_iterator(&(*(data.begin())));
 }
 
 
