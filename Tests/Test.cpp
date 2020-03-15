@@ -3,7 +3,6 @@
 #include "Test.hpp"
 #include "CSVParser.hpp"
 
-
 using namespace MyCSV;
 
 void openFile(std::ifstream &file, std::string filename)
@@ -15,7 +14,7 @@ void openFile(std::ifstream &file, std::string filename)
     }
 }
 
-TEST( CSVParserTest, constructorTest1 ) 
+TEST(CSVParserTest, constructorTest1)
 {
     std::ifstream file;
     CSVParser<double, int, std::string> csv1(file);
@@ -26,27 +25,27 @@ TEST( CSVParserTest, constructorTest1 )
     ASSERT_EQ(csv2.ColumnsNumber(), size_t(6));
 }
 
-TEST( CSVParserTest, constructorTest2 ) 
+TEST(CSVParserTest, constructorTest2)
 {
     std::ifstream file;
     openFile(file, "Simple.csv");
-    CSVParser< int, int> csv(file);
+    CSVParser<int, int> csv(file);
 
     ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
     ASSERT_EQ(csv.RowsNumber(), size_t(3));
 }
 
-TEST( CSVParserTest, hardTest ) 
+TEST(CSVParserTest, hardTest)
 {
     std::ifstream file;
     openFile(file, "Hard.csv");
-    CSVParser< int, std::string> csv(file);
+    CSVParser<int, std::string> csv(file);
 
     ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
     ASSERT_EQ(csv.RowsNumber(), size_t(3));
 }
 
-TEST( CSVParserTest, bigDataTest ) 
+TEST(CSVParserTest, bigDataTest)
 {
     std::ifstream file;
     openFile(file, "StandartSalesJan2009.csv");
@@ -63,8 +62,8 @@ TEST( CSVParserTest, bigDataTest )
         std::string,
         std::string,
         double,
-        double
-    > csv(file, 1);
+        double>
+        csv(file, 1);
 
     ASSERT_EQ(csv.ColumnsNumber(), size_t(12));
     ASSERT_EQ(csv.RowsNumber(), size_t(998));
@@ -78,12 +77,11 @@ TEST( CSVParserTest, bigDataTest )
     std::cout << "\ncount = " << count << "\n";
 }
 
-
-TEST( CSVParserTest, outputOperator ) 
+TEST(CSVParserTest, outputOperator)
 {
     std::ifstream file;
     openFile(file, "Hard.csv");
-    CSVParser< int, std::string> csv(file);
+    CSVParser<int, std::string> csv(file);
 
     ASSERT_EQ(csv.ColumnsNumber(), size_t(2));
     ASSERT_EQ(csv.RowsNumber(), size_t(3));
